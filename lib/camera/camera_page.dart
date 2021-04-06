@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sandbox/components/bottom_navigation_bar_view.dart';
+import 'package:flutter_sandbox/components/drawer_view.dart';
 import 'package:image/image.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -32,6 +34,7 @@ class _CameraPageState extends State<CameraPage> {
   bool isBackCamera = true;
   List<bool> isSelectedLensDirection = [true, false];
   List<bool> isSelectedCameraMode = [true, false];
+  int _selectedIndex = 2;
 
   @override
   void initState() {
@@ -121,42 +124,41 @@ class _CameraPageState extends State<CameraPage> {
     Widget bodyWidget;
 
     if (!kIsWeb) {
-      bodyWidget = Container(
-        padding: EdgeInsets.zero,
-        color: Colors.black,
-        child: Column(
-          children: [
-            FutureBuilder<void>(
-              future: _initializeControllerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  // If the Future is complete, display the preview.
-                  return Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height / 1.5,
-                        child: Center(
-                          child: CameraPreview(_controller),
+      bodyWidget = SafeArea(
+        child: Container(
+          padding: EdgeInsets.zero,
+          color: Colors.black,
+          child: Column(
+            children: [
+              FutureBuilder<void>(
+                future: _initializeControllerFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    // If the Future is complete, display the preview.
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 1.5,
+                          child: Center(
+                            child: CameraPreview(_controller),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                } else {
-                  // Otherwise, display a loading indicator.
-                  return Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-            Card(
-              color: Colors.black,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade900,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                    );
+                  } else {
+                    // Otherwise, display a loading indicator.
+                    return Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+              Card(
+                color: Colors.black,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade900,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -254,8 +256,8 @@ class _CameraPageState extends State<CameraPage> {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     } else {
@@ -269,6 +271,9 @@ class _CameraPageState extends State<CameraPage> {
       appBar: AppBar(
         title: Text('Camera'),
       ),
+      drawer: DrawerView(selectedIndex: _selectedIndex),
+      bottomNavigationBar:
+          BottomNavigationBarView(selectedIndex: _selectedIndex),
       body: bodyWidget,
     );
   }

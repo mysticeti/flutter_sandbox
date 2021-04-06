@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sandbox/ListOfScreens.dart';
 import 'package:flutter_sandbox/camera/camera_page.dart';
 import 'package:flutter_sandbox/firebase_auth/firebase_auth_login_page.dart';
 import 'package:flutter_sandbox/firebase_auth/firebase_auth_page.dart';
@@ -12,6 +11,8 @@ import 'package:flutter_sandbox/firebase_auth/firebase_auth_register_page.dart';
 import 'package:flutter_sandbox/firebase_auth/firebase_auth_signed_in_page.dart';
 import 'package:flutter_sandbox/firebase_crashlytics/firebase_crashlytics_page.dart';
 import 'package:flutter_sandbox/mapbox/mapbox_page.dart';
+
+import 'basic_widget/basic_widget_page.dart';
 
 List<CameraDescription> cameraList;
 
@@ -35,9 +36,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      initialRoute: ListOfScreen.id,
+      initialRoute: FirebaseCrashlyticsPage.id,
       routes: {
-        ListOfScreen.id: (context) => ListOfScreen(),
         MapboxMapPage.id: (context) => MapboxMapPage(),
         FirebaseAuthLandingPage.id: (context) => FirebaseAuthLandingPage(),
         FirebaseAuthLoginPage.id: (context) => FirebaseAuthLoginPage(),
@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
         FirebaseAuthSignedInPage.id: (context) => FirebaseAuthSignedInPage(),
         FirebaseCrashlyticsPage.id: (context) => FirebaseCrashlyticsPage(),
         CameraPage.id: (context) => CameraPage(cameras: cameraList),
+        BasicWidgetsPage.id: (context) => BasicWidgetsPage(),
       },
     );
   }

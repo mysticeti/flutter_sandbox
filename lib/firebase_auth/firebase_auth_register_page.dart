@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sandbox/ListOfScreens.dart';
+import 'package:flutter_sandbox/components/drawer_view.dart';
 import 'package:flutter_sandbox/firebase_auth/Components/rounded_button.dart';
 import 'package:flutter_sandbox/firebase_auth/firebase_auth_signed_in_page.dart';
 import 'package:flutter_sandbox/screen_arguments.dart';
@@ -97,8 +97,8 @@ class _FirebaseAuthRegistrationPageState
                         email: email, password: password);
                     if (newUser != null) {
                       if (args != null) {
-                        if (args.fromPage == ListOfScreen.id) {
-                          Navigator.pushNamed(context, ListOfScreen.id);
+                        if (args.fromPage == DrawerWindow.id) {
+                          Navigator.pop(context);
                         }
                       } else {
                         Navigator.pushNamed(
