@@ -6,8 +6,10 @@ import 'package:flutter_sandbox/camera/camera_page.dart';
 import 'package:flutter_sandbox/firebase_auth/firebase_auth_login_page.dart';
 import 'package:flutter_sandbox/firebase_auth/firebase_auth_register_page.dart';
 import 'package:flutter_sandbox/firebase_crashlytics/firebase_crashlytics_page.dart';
+import 'package:flutter_sandbox/firebase_firestore/firestore_page.dart';
 import 'package:flutter_sandbox/gps/gps_page.dart';
 import 'package:flutter_sandbox/mapbox/mapbox_page.dart';
+import 'package:flutter_sandbox/pageNavigatorCustom.dart';
 import 'package:provider/provider.dart';
 
 import 'auth.dart';
@@ -27,57 +29,63 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  final _pageController = PageController(initialPage: 0);
   String _title = 'Firebase Crashlytics';
-
-  void _onPageChanged(int pageIndex) {
-    setState(() {
-      _selectedIndex = pageIndex;
-      switch (pageIndex) {
-        case 0:
-          _title = 'Firebase Crashlytics';
-          break;
-        case 1:
-          _title = 'Mapbox Map';
-          break;
-        case 2:
-          _title = 'Camera';
-          break;
-        case 3:
-          _title = 'Basic Widgets';
-          break;
-        case 4:
-          _title = 'GPS';
-          break;
-        case 5:
-          _title = 'Login';
-          break;
-        case 6:
-          _title = 'Register';
-          break;
-        default:
-          _title = 'Sandbox';
-          break;
-      }
-    });
-  }
-
-  void _onBottomNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      _pageController.jumpToPage(index);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final PageNavigatorCustom _pageNavigator =
+        Provider.of<PageNavigatorCustom>(context);
+    final PageController _pageController = _pageNavigator.pageController;
+    void _onBottomNavItemTapped(int index) {
+      setState(() {
+        _pageNavigator.setCurrentPageIndex = index;
+        _pageController.jumpToPage(_pageNavigator.getCurrentPageIndex);
+      });
+    }
+
+    void _onPageChanged(int pageIndex) {
+      setState(() {
+        _pageNavigator.setCurrentPageIndex = pageIndex;
+
+        switch (pageIndex) {
+          case 0:
+            _title = 'Firebase Crashlytics';
+            break;
+          case 1:
+            _title = 'Mapbox Map';
+            break;
+          case 2:
+            _title = 'Camera';
+            break;
+          case 3:
+            _title = 'Basic Widgets';
+            break;
+          case 4:
+            _title = 'GPS';
+            break;
+          case 5:
+            _title = 'Firestore';
+            break;
+          case 6:
+            _title = 'Login';
+            break;
+          case 7:
+            _title = 'Register';
+            break;
+          default:
+            _title = 'Sandbox';
+            break;
+        }
+      });
+    }
+
     List<Widget> _screens = [
       FirebaseCrashlyticsPage(),
       MapboxMapPage(),
       CameraPage(cameras: widget.cameraList),
       BasicWidgetsPage(),
       GPSPage(),
+      FirestorePage(),
       // always add new screen above this comment so that auth remains the last two items.
       FirebaseAuthLoginPage(),
       FirebaseAuthRegistrationPage(),
@@ -111,13 +119,18 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.pink,
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.note_add),
+          label: 'Firestore',
+          backgroundColor: Colors.pink,
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.security_rounded),
           label: 'Auth',
           backgroundColor: Colors.pink,
         ),
       ],
-      currentIndex: (_selectedIndex < _screens.length - 1)
-          ? _selectedIndex
+      currentIndex: (_pageNavigator.getCurrentPageIndex < _screens.length - 1)
+          ? _pageNavigator.getCurrentPageIndex
           : _screens.length - 2,
       selectedItemColor: Colors.black,
       onTap: _onBottomNavItemTapped,
@@ -133,57 +146,16 @@ class _HomePageState extends State<HomePage> {
         children: _screens,
         onPageChanged: _onPageChanged,
       ),
-      drawer: DrawerView(
-          pageControllerRef: _pageController,
-          selectedIndex: _selectedIndex,
-          screensLength: _screens.length),
+      drawer: DrawerView(),
       bottomNavigationBar: _bottomNavBar,
     );
   }
 }
 
-bool isLoggedIn = false;
-
 class DrawerView extends StatelessWidget {
   const DrawerView({
     Key key,
-    @required PageController pageControllerRef,
-    @required int selectedIndex,
-    @required int screensLength,
-  })  : _refPageController = pageControllerRef,
-        _selectedIndex = selectedIndex,
-        _screensLength = screensLength,
-        super(key: key);
-
-  final PageController _refPageController;
-  final int _selectedIndex;
-  final int _screensLength;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => Auth(),
-        child: DrawerUpdate(
-            pageControllerRef: _refPageController,
-            selectedIndex: _selectedIndex,
-            screensLength: _screensLength));
-  }
-}
-
-class DrawerUpdate extends StatelessWidget {
-  const DrawerUpdate({
-    Key key,
-    @required PageController pageControllerRef,
-    @required int selectedIndex,
-    @required int screensLength,
-  })  : _refPageController = pageControllerRef,
-        _selectedIndex = selectedIndex,
-        _screensLength = screensLength,
-        super(key: key);
-
-  final PageController _refPageController;
-  final int _selectedIndex;
-  final int _screensLength;
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -192,13 +164,7 @@ class DrawerUpdate extends StatelessWidget {
         stream: auth.onAuthStateChanges,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
-            User user = snapshot.data;
-
-            isLoggedIn = (user == null) ? false : true;
-            return DrawerWindow(
-                pageControllerRef: _refPageController,
-                selectedIndex: _selectedIndex,
-                screensLength: _screensLength);
+            return DrawerWindow();
           } else {
             return Scaffold(
               body: Center(
@@ -213,20 +179,14 @@ class DrawerUpdate extends StatelessWidget {
 class DrawerWindow extends StatelessWidget {
   const DrawerWindow({
     Key key,
-    @required PageController pageControllerRef,
-    @required int selectedIndex,
-    @required int screensLength,
-  })  : _refPageController = pageControllerRef,
-        _selectedIndex = selectedIndex,
-        _screensLength = screensLength,
-        super(key: key);
-
-  final PageController _refPageController;
-  final int _selectedIndex;
-  final int _screensLength;
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final PageNavigatorCustom _pageNavigator =
+        Provider.of<PageNavigatorCustom>(context);
+    final PageController _pageController = _pageNavigator.getPageController;
+    Auth authProvider = Provider.of<Auth>(context);
     final _auth = FirebaseAuth.instance;
 
     List<Widget> listViewItems = [
@@ -235,51 +195,64 @@ class DrawerWindow extends StatelessWidget {
         child: Text('Demos'),
       ),
       ListTile(
-        selected: _selectedIndex == 0,
+        selected: _pageNavigator.getCurrentPageIndex == 0,
         title: Text('Firebase Crashlytics'),
         onTap: () {
-          if (_selectedIndex != 0) {
-            _refPageController.jumpToPage(0);
+          if (_pageNavigator.getCurrentPageIndex != 0) {
+            _pageController
+                .jumpToPage(_pageNavigator.getPageIndex('FirebaseCrashlytics'));
           }
           Navigator.pop(context);
         },
       ),
       ListTile(
-        selected: _selectedIndex == 1,
+        selected: _pageNavigator.getCurrentPageIndex == 1,
         title: Text('Mapbox Map'),
         onTap: () {
-          if (_selectedIndex != 1) {
-            _refPageController.jumpToPage(1);
+          if (_pageNavigator.getCurrentPageIndex != 1) {
+            _pageController.jumpToPage(_pageNavigator.getPageIndex('Mapbox'));
           }
           Navigator.pop(context);
         },
       ),
       ListTile(
-        selected: _selectedIndex == 2,
+        selected: _pageNavigator.getCurrentPageIndex == 2,
         title: Text('Camera'),
         onTap: () {
-          if (_selectedIndex != 2) {
-            _refPageController.jumpToPage(2);
+          if (_pageNavigator.getCurrentPageIndex != 2) {
+            _pageController.jumpToPage(_pageNavigator.getPageIndex('Camera'));
           }
           Navigator.pop(context);
         },
       ),
       ListTile(
-        selected: _selectedIndex == 3,
+        selected: _pageNavigator.getCurrentPageIndex == 3,
         title: Text('Basic Widgets'),
         onTap: () {
-          if (_selectedIndex != 3) {
-            _refPageController.jumpToPage(3);
+          if (_pageNavigator.getCurrentPageIndex != 3) {
+            _pageController
+                .jumpToPage(_pageNavigator.getPageIndex('BasicWidgets'));
           }
           Navigator.pop(context);
         },
       ),
       ListTile(
-        selected: _selectedIndex == 4,
+        selected: _pageNavigator.getCurrentPageIndex == 4,
         title: Text('GPS'),
         onTap: () {
-          if (_selectedIndex != 4) {
-            _refPageController.jumpToPage(4);
+          if (_pageNavigator.getCurrentPageIndex != 4) {
+            _pageController.jumpToPage(_pageNavigator.getPageIndex('GPS'));
+          }
+          Navigator.pop(context);
+        },
+      ),
+      ListTile(
+        selected: _pageNavigator.getCurrentPageIndex == 5,
+        title: Text('Firestore'),
+        onTap: () {
+          if (_pageNavigator.getCurrentPageIndex != 5) {
+            _pageController
+                .jumpToPage(_pageNavigator.getPageIndex('Firestore'));
           }
           Navigator.pop(context);
         },
@@ -293,7 +266,7 @@ class DrawerWindow extends StatelessWidget {
       ),
     ];
 
-    if (isLoggedIn) {
+    if (authProvider.getUserLoginStatus) {
       listViewItems.insert(
         0,
         DrawerHeader(
@@ -323,6 +296,7 @@ class DrawerWindow extends StatelessWidget {
           title: Text('Log out'),
           onTap: () {
             _auth.signOut();
+            authProvider.setUserLoginStatus = false;
             Navigator.pop(context);
           },
         ),
@@ -354,7 +328,8 @@ class DrawerWindow extends StatelessWidget {
         ListTile(
           title: Text('Log in'),
           onTap: () {
-            _refPageController.jumpToPage(_screensLength - 2);
+            _pageController
+                .jumpToPage(_pageNavigator.getPageIndex('FirebaseAuthLogin'));
             Navigator.pop(context);
           },
         ),
@@ -363,7 +338,8 @@ class DrawerWindow extends StatelessWidget {
         ListTile(
           title: Text('Register'),
           onTap: () {
-            _refPageController.jumpToPage(_screensLength - 1);
+            _pageController.jumpToPage(
+                _pageNavigator.getPageIndex('FirebaseAuthRegister'));
             Navigator.pop(context);
           },
         ),
