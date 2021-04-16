@@ -25,8 +25,11 @@ For in-depth instructions please visit <https://flutter.dev/docs/get-started/tes
 
 ## Additional files that needs to be modified to include private data.
 ### Firebase
-- Add your google-services.json in android>app folder.
-- Add your Firebase config variable for web support in web>index.html.
+- Add your google-services.json in android/app folder.
+- Add your Firebase config variable for web support in web/index.html.
+
+### Google Maps
+In Android, Google Maps API key needs to be defined in the AndroidManifest.xml in the following directory android/app/src/main/res/AndroidManifest.xml. In IOS, include Google Maps APP key in AppDelegate.m file in ios/Runner/AppDelegate.m.
 
 ## Compile-time variables
 To provide compile-time variables use `--dart-define` during `flutter run` or `flutter build`. To pass multiple key-value pairs just use `--dart-define` multiple times.
