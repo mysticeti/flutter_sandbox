@@ -15,6 +15,7 @@ class FirebaseCrashlyticsPage extends StatelessWidget {
     _pageNavigator.setCurrentPageIndex =
         _pageNavigator.getPageIndex('Firebase Crashlytics');
     _pageNavigator.setFromIndex = _pageNavigator.getCurrentPageIndex;
+    MediaQueryData deviceData = MediaQuery.of(context);
 
     FirebaseCrashlytics fci = FirebaseCrashlytics.instance;
     String message =
@@ -38,32 +39,41 @@ class FirebaseCrashlyticsPage extends StatelessWidget {
       onPressCrash = null;
     }
 
-    return Card(
-      child: Container(
-        child: Column(
-          children: [
-            Container(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
               color: Colors.red.shade100,
-              height: 200,
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  message,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            width: deviceData.orientation == Orientation.portrait
+                ? deviceData.size.width * 0.9
+                : deviceData.size.width * 0.7,
+            height: deviceData.size.height * 0.3,
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                message,
+                style: TextStyle(
+                  fontSize: 20.0,
                 ),
               ),
             ),
-            ElevatedButton.icon(
-              onPressed: onPressCrash,
-              icon: Icon(Icons.error_rounded),
-              label: Text('Press to crash'),
-            ),
-          ],
+          ),
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: ElevatedButton.icon(
+            onPressed: onPressCrash,
+            icon: Icon(Icons.error_rounded),
+            label: Text('Press to crash'),
+          ),
+        ),
+      ],
     );
   }
 }
