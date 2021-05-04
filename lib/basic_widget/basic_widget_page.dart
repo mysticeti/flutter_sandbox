@@ -32,8 +32,6 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
 
   String _hour, _minute, _time;
 
-  String dateTime;
-
   DateTime selectedDate = DateTime.now();
 
   TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
@@ -117,33 +115,39 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
         indexedWidget = Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Slider.adaptive(
-              activeColor: Theme.of(context).accentColor,
-              inactiveColor: kSliderInActiveColor,
-              value: currentSliderValueContinuous,
-              onChanged: (double value) {
-                setState(() {
-                  currentSliderValueContinuous = value;
-                });
-              },
+            Container(
+              width: _width,
+              child: Slider.adaptive(
+                activeColor: Theme.of(context).accentColor,
+                inactiveColor: kSliderInActiveColor,
+                value: currentSliderValueContinuous,
+                onChanged: (double value) {
+                  setState(() {
+                    currentSliderValueContinuous = value;
+                  });
+                },
+              ),
             ),
             Text(currentSliderValueContinuous.toStringAsFixed(1)),
             SizedBox(
               height: 3,
             ),
-            Slider.adaptive(
-              activeColor: Theme.of(context).accentColor,
-              inactiveColor: kSliderInActiveColor,
-              value: currentSliderValueDiscrete,
-              min: 0,
-              max: 100,
-              divisions: 5,
-              label: currentSliderValueDiscrete.round().toString(),
-              onChanged: (double value) {
-                setState(() {
-                  currentSliderValueDiscrete = value;
-                });
-              },
+            Container(
+              width: _width,
+              child: Slider.adaptive(
+                activeColor: Theme.of(context).accentColor,
+                inactiveColor: kSliderInActiveColor,
+                value: currentSliderValueDiscrete,
+                min: 0,
+                max: 100,
+                divisions: 5,
+                label: currentSliderValueDiscrete.round().toString(),
+                onChanged: (double value) {
+                  setState(() {
+                    currentSliderValueDiscrete = value;
+                  });
+                },
+              ),
             ),
             Text(currentSliderValueDiscrete.round().toString()),
           ],
@@ -240,42 +244,45 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
 
       case 2:
         indexedWidget = Center(
-          child: ListView(
-            children: [
-              CheckboxListTile(
-                activeColor: kPrimary,
-                title: Text('Wake up'),
-                value: checkBoxValues[0],
-                onChanged: (bool value) {
-                  setState(() {
-                    checkBoxValues[0] = value;
-                  });
-                },
-                secondary: Icon(Icons.alarm),
-              ),
-              CheckboxListTile(
-                activeColor: kPrimary,
-                title: Text('Put on the suit'),
-                value: checkBoxValues[1],
-                onChanged: (bool value) {
-                  setState(() {
-                    checkBoxValues[1] = value;
-                  });
-                },
-                secondary: Icon(Icons.work),
-              ),
-              CheckboxListTile(
-                activeColor: kPrimary,
-                title: Text('Be the Hero'),
-                value: checkBoxValues[2],
-                onChanged: (bool value) {
-                  setState(() {
-                    checkBoxValues[2] = value;
-                  });
-                },
-                secondary: Icon(Icons.engineering),
-              ),
-            ],
+          child: Container(
+            width: _width,
+            child: ListView(
+              children: [
+                CheckboxListTile(
+                  activeColor: kPrimary,
+                  title: Text('Wake up'),
+                  value: checkBoxValues[0],
+                  onChanged: (bool value) {
+                    setState(() {
+                      checkBoxValues[0] = value;
+                    });
+                  },
+                  secondary: Icon(Icons.alarm),
+                ),
+                CheckboxListTile(
+                  activeColor: kPrimary,
+                  title: Text('Put on the suit'),
+                  value: checkBoxValues[1],
+                  onChanged: (bool value) {
+                    setState(() {
+                      checkBoxValues[1] = value;
+                    });
+                  },
+                  secondary: Icon(Icons.work),
+                ),
+                CheckboxListTile(
+                  activeColor: kPrimary,
+                  title: Text('Be the Hero'),
+                  value: checkBoxValues[2],
+                  onChanged: (bool value) {
+                    setState(() {
+                      checkBoxValues[2] = value;
+                    });
+                  },
+                  secondary: Icon(Icons.engineering),
+                ),
+              ],
+            ),
           ),
         );
         break;
@@ -329,9 +336,12 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
         _pageNavigator.getPageIndex('Basic Widgets');
     _pageNavigator.setFromIndex = _pageNavigator.getCurrentPageIndex;
 
-    _height = MediaQuery.of(context).size.height;
-    _width = MediaQuery.of(context).size.width;
-    dateTime = DateFormat.yMd().format(DateTime.now());
+    MediaQueryData deviceData = MediaQuery.of(context);
+
+    _height = deviceData.size.height;
+    _width = (deviceData.orientation == Orientation.portrait)
+        ? deviceData.size.width
+        : deviceData.size.width * 0.8;
 
     return Scaffold(
       appBar: AppBar(
