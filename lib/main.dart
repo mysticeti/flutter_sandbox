@@ -27,6 +27,7 @@ import 'package:flutter_sandbox/mapbox/mapbox_page.dart';
 import 'package:flutter_sandbox/pageNavigatorCustom.dart';
 import 'package:flutter_sandbox/rive/rive_page.dart';
 import 'package:flutter_sandbox/sandbox_license/sandbox_license_page.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import 'basic_widget/basic_widget_page.dart';
@@ -51,27 +52,62 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 Function selectNotification;
 Function onDidReceiveLocalNotification;
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  if (!kIsWeb) {
-    cameraList = await availableCameras();
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+void main() {
+  runApp(InitApp());
+}
 
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+class InitApp extends StatelessWidget {
+  Future<void> _init() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    if (!kIsWeb) {
+      cameraList = await availableCameras();
+      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(channel);
+    }
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+    return Future.delayed(Duration(seconds: 3));
   }
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true, // Required to display a heads up notification
-    badge: true,
-    sound: true,
-  );
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _init(),
+      builder: (context, AsyncSnapshot snapshot) {
+        // Show splash screen while waiting for app resources to load:
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return MaterialApp(debugShowCheckedModeBanner: false, home: Splash());
+        } else {
+          // Loading is done, return the app:
+          return MyApp();
+        }
+      },
+    );
+  }
+}
 
-  runApp(MyApp());
+class Splash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Size deviceSize = MediaQuery.of(context).size;
+    return Scaffold(
+      body: Center(
+        child: Lottie.asset('assets/lottie/loading.json',
+            width: deviceSize.width * 0.6, fit: BoxFit.fill),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
