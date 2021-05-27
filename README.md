@@ -41,3 +41,17 @@ Modify `web/index.html` to specify your API key for Web.
 ## Compile-time variables
 To provide compile-time variables use `--dart-define` during `flutter run` or `flutter build`. To pass multiple key-value pairs just use `--dart-define` multiple times.
 `flutter run --dart-define=ACCESS_TOKEN_MAPBOX --dart-define=VARIABLE=VARIABLE_VALUE`
+
+## Quality Assurance
+#### Run Unit Test
+##### Android Studio
+1. Right-click on pageNavigatorCustom_test.dart file
+2. Press the Run `tests in pageNavigatorCustom_test.dart` option.
+
+##### Visual Studio Code
+1. Open the pageNavigatorCustom_test.dart file
+2. Select the Run menu
+3. Click the Start Debugging option
+
+##### Terminal & editor
+`flutter test`
