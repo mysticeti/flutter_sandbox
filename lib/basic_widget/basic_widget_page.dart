@@ -2,7 +2,6 @@ import 'package:date_format/date_format.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_sandbox/constants.dart';
 import 'package:flutter_sandbox/pageNavigatorCustom.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -126,7 +125,7 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
               child: Slider.adaptive(
                 key: Key('continuous_slider'),
                 activeColor: Theme.of(context).accentColor,
-                inactiveColor: kSliderInActiveColor,
+                inactiveColor: Colors.red.shade100,
                 value: currentSliderValueContinuous,
                 onChanged: (double value) {
                   setState(() {
@@ -144,7 +143,7 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
               child: Slider.adaptive(
                 key: Key('discrete_slider'),
                 activeColor: Theme.of(context).accentColor,
-                inactiveColor: kSliderInActiveColor,
+                inactiveColor: Colors.red.shade100,
                 value: currentSliderValueDiscrete,
                 min: 0,
                 max: 100,
@@ -187,7 +186,8 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
                       height: _height / 9,
                       margin: EdgeInsets.only(top: 30),
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Colors.grey[200]),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).backgroundColor),
                       child: TextFormField(
                         style: TextStyle(fontSize: 40),
                         textAlign: TextAlign.center,
@@ -225,7 +225,8 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
                       width: _width / 1.7,
                       height: _height / 9,
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(color: Colors.grey[200]),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).backgroundColor),
                       child: TextFormField(
                         style: TextStyle(fontSize: 40),
                         textAlign: TextAlign.center,
@@ -257,7 +258,7 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
             child: ListView(
               children: [
                 CheckboxListTile(
-                  activeColor: kPrimary,
+                  activeColor: Theme.of(context).primaryColor,
                   title: Text(AppLocalizations.of(context).basicWidgetsWakeUp),
                   value: checkBoxValues[0],
                   onChanged: (bool value) {
@@ -268,7 +269,7 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
                   secondary: Icon(Icons.alarm),
                 ),
                 CheckboxListTile(
-                  activeColor: kPrimary,
+                  activeColor: Theme.of(context).primaryColor,
                   title: Text(
                       AppLocalizations.of(context).basicWidgetsPutOnTheSuit),
                   value: checkBoxValues[1],
@@ -280,7 +281,7 @@ class _BasicWidgetsPageState extends State<BasicWidgetsPage>
                   secondary: Icon(Icons.work),
                 ),
                 CheckboxListTile(
-                  activeColor: kPrimary,
+                  activeColor: Theme.of(context).primaryColor,
                   title:
                       Text(AppLocalizations.of(context).basicWidgetsBetheHero),
                   value: checkBoxValues[2],
