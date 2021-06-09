@@ -20,6 +20,7 @@
   "fcmTitle": "FCM",
   "cloudStorageTitle": "Cloud Storage",
   "darkModeTitle": "Modalità scura",
+  "draggableTitle": "Trascinabile",
 
 
   "logOut": "Disconnettersi",
@@ -90,6 +91,11 @@
   "riveWipers": "Tergicristalli",
   "riveBroken": "Rotta",
 
+  "draggableCorrect": "Corretto",
+  "draggableWrong": "Sbagliato",
+  "draggableOdd": "Dispari",
+  "draggableEven": "Pari",
+
   "fcmGetToken": "Ottieni token",
 
   "semCameraPgRearCameraToggleButton": "Pulsante per la visualizzazione della telecamera posteriore",
@@ -127,5 +133,7 @@
   "semDarkModePgSwitch": "Passa per alternare tra modalità oscura e modalità luce",
   "semDarkModePgDarkModeOn": "Modalità scura selezionata",
   "semDarkModePgDarkModeOff": "Modalità luce selezionata"
+
+
 
 }

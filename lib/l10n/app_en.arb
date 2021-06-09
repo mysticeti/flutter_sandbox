@@ -20,6 +20,7 @@
   "fcmTitle": "FCM",
   "cloudStorageTitle": "Cloud Storage",
   "darkModeTitle": "Dark Mode",
+  "draggableTitle": "Draggable",
 
   "logOut": "Log out",
 
@@ -89,6 +90,11 @@
   "riveWipers": "Wipers",
   "riveBroken": "Broken",
 
+  "draggableCorrect": "Correct",
+  "draggableWrong": "Wrong",
+  "draggableOdd": "Odd",
+  "draggableEven": "Even",
+
   "fcmGetToken": "Get Token",
 
   "semCameraPgRearCameraToggleButton": "Button for rear camera view",
@@ -126,4 +132,5 @@
   "semDarkModePgSwitch": "Switch for toggling between dark mode and light mode",
   "semDarkModePgDarkModeOn": "Dark mode selected",
   "semDarkModePgDarkModeOff": "Light mode selected"
+
 }
