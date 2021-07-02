@@ -15,7 +15,8 @@ import 'package:flutter_sandbox/basic_effects/basic_effects_page.dart';
 import 'package:flutter_sandbox/camera/camera_page.dart';
 import 'package:flutter_sandbox/currentLocale.dart';
 import 'package:flutter_sandbox/dark_mode/dark_mode_screen.dart';
-import 'package:flutter_sandbox/database/sembast/person_dao.dart';
+import 'package:flutter_sandbox/database/moor/moor_database.dart';
+import 'package:flutter_sandbox/database/sembast/person_dao_sembast.dart';
 import 'package:flutter_sandbox/draggable/draggable_page.dart';
 import 'package:flutter_sandbox/firebase_auth/firebase_auth_login_page.dart';
 import 'package:flutter_sandbox/firebase_auth/firebase_auth_register_page.dart';
@@ -230,7 +231,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => LanguageTitle()),
         ChangeNotifierProvider(create: (_) => AppSettings()),
         Provider<FirebaseAnalytics>.value(value: analytics),
-        ChangeNotifierProvider(create: (_) => PersonDao()),
+        ChangeNotifierProvider(create: (_) => PersonDaoSembast()),
+        Provider(create: (_) => AppMoorDatabase().personDaoMoor),
       ],
       builder: (context, child) {
         return MaterialApp(
