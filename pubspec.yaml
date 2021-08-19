@@ -3,7 +3,7 @@ description: A new Flutter sandbox application
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -26,7 +26,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.17.0
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -68,6 +67,7 @@ dependencies:
   shared_preferences: ^2.0.6
   http: ^0.13.3
   google_ml_kit: ^0.7.0
+  google_fonts: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -76,7 +76,6 @@ dev_dependencies:
   flutter_launcher_icons: ^0.9.0
   moor_generator: ^4.3.2
   build_runner: ^2.0.5
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -98,6 +97,7 @@ flutter:
     - assets/logo/
     - assets/lottie/
     - assets/audio/
+    - assets/google_fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -125,7 +125,6 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 flutter_native_splash:
-
   # This package generates native code to customize Flutter's default white native splash screen
   # with background color and splash image.
   # Customize the parameters below, and run the following command in the terminal:
