@@ -26,8 +26,9 @@ class PageNavigatorCustom extends ChangeNotifier {
     "Dialog": 18,
     "Rest API": 19,
     "Google ML Kit": 20,
-    "FirebaseAuthLogin": 21,
-    "FirebaseAuthRegister": 22,
+    "Flutter Map": 21,
+    "FirebaseAuthLogin": 22,
+    "FirebaseAuthRegister": 23,
   };
   int fromIndex;
 
