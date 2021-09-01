@@ -3,10 +3,12 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_sandbox/google_ml_kit/barcode_scanner_view.dart';
+import 'package:flutter_sandbox/google_ml_kit/face_detection_view.dart';
 import 'package:flutter_sandbox/pageNavigatorCustom.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import 'barcode_scanner_view.dart';
 
 class GoogleMLKitPage extends StatefulWidget {
   static const id = "google_ml_kit_page";
@@ -27,7 +29,7 @@ class _GoogleMLKitPageState extends State<GoogleMLKitPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 1);
+    _tabController = TabController(vsync: this, length: 2);
   }
 
   @override
@@ -43,8 +45,49 @@ class _GoogleMLKitPageState extends State<GoogleMLKitPage>
         indexedWidget = BarcodeScannerView(
           cameras: widget.cameras,
         );
+        break;
+      case 1:
+        indexedWidget = FaceDetectionView(
+          cameras: widget.cameras,
+        );
+        break;
     }
     return indexedWidget;
+  }
+
+  Widget gradientButton(String text, Function onPressed) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: Stack(
+          children: <Widget>[
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: <Color>[
+                      Color(0xFFFF6F00),
+                      Color(0xFFFB8C00),
+                      Color(0xFFFF7043),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16.0),
+                primary: Colors.white,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+              onPressed: onPressed,
+              child: Text(text),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -60,6 +103,7 @@ class _GoogleMLKitPageState extends State<GoogleMLKitPage>
 
     final List<Tab> googleMLKitTabs = <Tab>[
       Tab(text: localizations.googMLKitBarcodeScanner),
+      Tab(text: localizations.googleMLKitFaceDetector),
     ];
 
     return (kIsWeb)
@@ -70,22 +114,31 @@ class _GoogleMLKitPageState extends State<GoogleMLKitPage>
             ),
           )
         : Scaffold(
-            appBar: AppBar(
-              toolbarHeight: 55,
-              bottom: TabBar(
-                controller: _tabController,
-                indicatorColor: Colors.grey.shade50,
-                isScrollable: true,
-                tabs: googleMLKitTabs,
-                labelStyle: GoogleFonts.lato(),
-              ),
-            ),
-            body: TabBarView(
-              controller: _tabController,
+            body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                onSelectedWindow(0, localizations),
+                gradientButton("Barcode Scanner", () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BarcodeScannerView(
+                                cameras: widget.cameras,
+                                title: localizations.googMLKitBarcodeScanner,
+                              )));
+                }),
+                gradientButton("Face Detector", () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FaceDetectionView(
+                                cameras: widget.cameras,
+                                title: localizations.googleMLKitFaceDetector,
+                              )));
+                }),
               ],
             ),
-          );
+          ));
   }
 }

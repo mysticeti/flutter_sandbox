@@ -1,31 +1,35 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sandbox/google_ml_kit/camera_view.dart';
+import 'package:flutter_sandbox/google_ml_kit/painters/face_detector_painter.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 
-import 'painters/barcode_detector_painter.dart';
+import 'camera_view.dart';
 
-class BarcodeScannerView extends StatefulWidget {
+class FaceDetectionView extends StatefulWidget {
   final List<CameraDescription> cameras;
   final String title;
-  const BarcodeScannerView({
+  const FaceDetectionView({
     Key key,
     @required this.cameras,
     @required this.title,
   }) : super(key: key);
 
   @override
-  _BarcodeScannerViewState createState() => _BarcodeScannerViewState();
+  _FaceDetectionViewState createState() => _FaceDetectionViewState();
 }
 
-class _BarcodeScannerViewState extends State<BarcodeScannerView> {
-  BarcodeScanner barcodeScanner = GoogleMlKit.vision.barcodeScanner();
+class _FaceDetectionViewState extends State<FaceDetectionView> {
+  FaceDetector faceDetector =
+      GoogleMlKit.vision.faceDetector(FaceDetectorOptions(
+    enableContours: true,
+    enableClassification: true,
+  ));
   bool isBusy = false;
   CustomPaint customPaint;
 
   @override
   void dispose() {
-    barcodeScanner.close();
+    faceDetector.close();
     super.dispose();
   }
 
@@ -49,12 +53,10 @@ class _BarcodeScannerViewState extends State<BarcodeScannerView> {
   Future<void> processImage(InputImage inputImage) async {
     if (isBusy) return;
     isBusy = true;
-    final barcodes = await barcodeScanner.processImage(inputImage);
-    if (inputImage.inputImageData.size != null &&
-        inputImage.inputImageData.imageRotation != null) {
-      final painter = BarcodeDetectorPainter(
-          barcodes,
-          inputImage.inputImageData.size,
+    final faces = await faceDetector.processImage(inputImage);
+    if (inputImage.inputImageData?.size != null &&
+        inputImage.inputImageData?.imageRotation != null) {
+      final painter = FaceDetectorPainter(faces, inputImage.inputImageData.size,
           inputImage.inputImageData.imageRotation);
       customPaint = CustomPaint(painter: painter);
     } else {
