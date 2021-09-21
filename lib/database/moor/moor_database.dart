@@ -1,4 +1,4 @@
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 
 part 'moor_database.g.dart';
 
@@ -12,14 +12,12 @@ class PersonsMoor extends Table {
 @UseMoor(tables: [PersonsMoor], daos: [PersonDaoMoor])
 // _$AppDatabase is the name of the generated class
 class AppMoorDatabase extends _$AppMoorDatabase {
-  AppMoorDatabase()
-      // Specify the location of the database file
-      : super((FlutterQueryExecutor.inDatabaseFolder(
-          path: 'moordb.sqlite',
-          // Good for debugging - prints SQL in the console
-          logStatements: true,
-        )));
+  bool isInDebugMode = true;
 
+  // we tell the database where to store the data with this constructor
+  AppMoorDatabase(QueryExecutor e) : super(e);
+
+  // you should bump this number whenever you change or add a table definition.
   @override
   int get schemaVersion => 1;
 }

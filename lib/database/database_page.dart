@@ -6,7 +6,7 @@ import 'package:flutter_sandbox/database/sembast/model/person_sembast.dart';
 import 'package:flutter_sandbox/database/sembast/person_dao_sembast.dart';
 import 'package:flutter_sandbox/pageNavigatorCustom.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:moor/moor.dart';
 import 'package:provider/provider.dart';
 
 import 'moor/moor_database.dart';
@@ -48,7 +48,9 @@ class _DatabasePageState extends State<DatabasePage>
           break;
         case 1:
           fabOnPressed = () {
-            addPersonMoorDB(_personDaoMoor);
+            if (!kIsWeb) {
+              addPersonMoorDB(_personDaoMoor);
+            }
           };
           break;
       }
@@ -357,7 +359,7 @@ class _DatabasePageState extends State<DatabasePage>
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 55,
+        toolbarHeight: 10,
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.grey.shade50,
