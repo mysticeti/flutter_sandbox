@@ -1,6 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sandbox/pageNavigatorCustom.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -98,7 +97,8 @@ class _ChartsPageState extends State<ChartsPage> {
         touchTooltipData: LineTouchTooltipData(
           tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
         ),
-        touchCallback: (LineTouchResponse touchResponse) {},
+        touchCallback:
+            (FlTouchEvent touchEvent, LineTouchResponse touchResponse) {},
         handleBuiltInTouches: true,
       ),
       gridData: FlGridData(
@@ -364,18 +364,18 @@ class _ChartsPageState extends State<ChartsPage> {
               padding: const EdgeInsets.all(16.0),
               child: PieChart(
                 PieChartData(
-                    pieTouchData:
-                        PieTouchData(touchCallback: (pieTouchResponse) {
+                    pieTouchData: PieTouchData(touchCallback:
+                        (FlTouchEvent pieTouchEvent, pieTouchResponse) {
                       setState(() {
-                        final desiredTouch =
-                            pieTouchResponse.touchInput is! PointerExitEvent &&
-                                pieTouchResponse.touchInput is! PointerUpEvent;
-                        if (desiredTouch &&
-                            pieTouchResponse.touchedSection != null) {
+                        if (!pieTouchEvent.isInterestedForInteractions ||
+                            pieTouchResponse == null ||
+                            pieTouchResponse.touchedSection == null) {
+                          simplePieChartTouchedIndex = -1;
+                          return;
+                        }
+                        if (pieTouchResponse.touchedSection != null) {
                           simplePieChartTouchedIndex = pieTouchResponse
                               .touchedSection.touchedSectionIndex;
-                        } else {
-                          simplePieChartTouchedIndex = -1;
                         }
                       });
                     }),
@@ -757,12 +757,12 @@ class _ChartsPageState extends State<ChartsPage> {
                         getTooltipItems: (ScatterSpot touchedBarSpot) {
                           return ScatterTooltipItem(
                             'X: ',
-                            TextStyle(
+                            textStyle: TextStyle(
                               height: 1.2,
-                              color: Colors.grey[100],
+                              color: Colors.grey.shade100,
                               fontStyle: FontStyle.italic,
                             ),
-                            10,
+                            bottomMargin: 10,
                             children: [
                               TextSpan(
                                   text: '${touchedBarSpot.x.toInt()} \n',
@@ -795,8 +795,9 @@ class _ChartsPageState extends State<ChartsPage> {
                           );
                         },
                       ),
-                      touchCallback: (ScatterTouchResponse touchResponse) {
-                        if (touchResponse.clickHappened &&
+                      touchCallback: (FlTouchEvent touchEvent,
+                          ScatterTouchResponse touchResponse) {
+                        if ((touchEvent is FlTapUpEvent) &&
                             touchResponse.touchedSpot != null) {
                           final sectionIndex =
                               touchResponse.touchedSpot.spotIndex;
