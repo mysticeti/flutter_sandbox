@@ -50,7 +50,7 @@ dependencies:
   getwidget: ^2.0.4
   rive: ^0.7.33
   firebase_messaging: ^10.0.9
-  flutter_local_notifications: ^8.2.0 # update required breaking changes
+  flutter_local_notifications: ^9.0.2
   lottie: ^1.2.1
   firebase_analytics: ^8.3.4
   firebase_storage: ^10.0.6

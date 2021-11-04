@@ -51,7 +51,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'flutter_sandbox_channel', // id
   'High Importance Notifications', // title
-  'This channel is used for important notifications.', // description
+  description:
+      'This channel is used for important notifications.', // description
   importance: Importance.max,
 );
 
@@ -227,7 +228,7 @@ class _MyAppState extends State<MyApp> {
               android: AndroidNotificationDetails(
                 channel.id,
                 channel.name,
-                channel.description,
+                channelDescription: channel.description,
                 icon: 'launch_background',
               ),
             ));
